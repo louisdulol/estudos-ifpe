@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Simulado IFPE/ETEPE 2026 - Interativo</title>
+    <style>
+        /* ===== RESET E BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --azul-ifpe: #4472C4;
+            --azul-escuro: #2E5A9C;
+            --verde-destaque: #70AD47;
+            --verde-escuro: #5A8A38;
+            --vermelho-erro: #E74C3C;
+            --vermelho-escuro: #C0392B;
+            --cinza-claro: #F5F6FA;
+            --cinza-medio: #BDC3C7;
+            --cinza-escuro: #7F8C8D;
+            --branco: #FFFFFF;
+            --preto: #2C3E50;
+            --sombra: 0 4px 15px rgba(0,0,0,0.1);
+            --sombra-hover: 0 6px 20px rgba(0,0,0,0.15);
+            --transicao: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--cinza-claro) 0%, #E8ECF3 100%);
+            min-height: 100vh;
+            color: var(--preto);
+            line-height: 1.6;
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--azul-ifpe) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--sombra);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header .subtitulo {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* ===== TELA INICIAL ===== */
+        .tela-inicial {
+            background: var(--branco);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--sombra);
+            text-align: center;
+        }
+
+        .tela-inicial h2 {
+            color: var(--azul-ifpe);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: var(--cinza-claro);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: var(--azul-escuro);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 1em;
+        }
+
+        .info-item .emoji {
+            font-size: 1.3em;
+            margin-right: 12px;
+            min-width: 30px;
+        }
+
+        .historico-box {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid var(--verde-destaque);
+        }
+
+        .historico-box h3 {
+            color: var(--verde-escuro);
+            margin-bottom: 12px;
+        }
+
+        .historico-item {
+            margin: 8px 0;
+            color: var(--preto);
+        }
+
+        .btn-iniciar {
+            background: linear-gradient(135deg, var(--verde-destaque) 0%, var(--verde-escuro) 100%);
+            color: var(--branco);
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--sombra);
+            transition: var(--transicao);
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-iniciar:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--sombra-hover);
+        }
+
+        .btn-iniciar:active {
+            transform: translateY(0);
+        }
+
+        /* ===== TELA DE QUESTÃO ===== */
+        .questao-container {
+            background: var(--branco);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--sombra);
+            margin-bottom: 20px;
+        }
+
+        .questao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--cinza-claro);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .questao-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .questao-numero {
+            background: var(--azul-ifpe);
+            color: var(--branco);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .disciplina-tag {
+            background: var(--cinza-claro);
+            color: var(--azul-escuro);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .disciplina-tag.matematica { background: #E3F2FD; color: #1565C0; }
+        .disciplina-tag.portugues { background: #FCE4EC; color: #C2185B; }
+        .disciplina-tag.ciencias { background: #E8F5E9; color: #2E7D32; }
+        .disciplina-tag.historia { background: #FFF3E0; color: #E65100; }
+        .disciplina-tag.geografia { background: #F3E5F5; color: #7B1FA2; }
+
+        .timer {
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFF176 100%);
+            color: #F57F17;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer.alerta {
+            background: linear-gradient(135deg, #FFCDD2 0%, #EF9A9A 100%);
+            color: #C62828;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .enunciado {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: var(--preto);
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--cinza-claro);
+            border-radius: 10px;
+            border-left: 4px solid var(--azul-ifpe);
+        }
+
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .alternativa {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 20px;
+            background: var(--cinza-claro);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transicao);
+            border: 2px solid transparent;
+        }
+
+        .alternativa:hover {
+            background: #E8ECF3;
+            transform: translateX(5px);
+        }
+
+        .alternativa.selecionada {
+            background: #E3F2FD;
+            border-color: var(--azul-ifpe);
+        }
+
+        .alternativa.correta {
+            background: #E8F5E9;
+            border-color: var(--verde-destaque);
+        }
+
+        .alternativa.incorreta {
+            background: #FFEBEE;
+            border-color: var(--vermelho-erro);
+        }
+
+        .alternativa-letra {
+            background: var(--azul-ifpe);
+            color: var(--branco);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .alternativa.selecionada .alternativa-letra {
+            background: var(--azul-escuro);
+        }
+
+        .alternativa.correta .alternativa-letra {
+            background: var(--verde-destaque);
+        }
+
+        .alternativa.incorreta .alternativa-letra {
+            background: var(--vermelho-erro);
+        }
+
+        .alternativa-texto {
+            flex: 1;
+            padding-top: 4px;
+        }
+
+        /* ===== BOTÃO MARCAR ===== */
+        .marcar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--branco);
+            border: 2px solid var(--cinza-medio);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transicao);
+            margin: 20px 0;
+            font-size: 0.95em;
+            color: var(--cinza-escuro);
+        }
+
+        .marcar-btn:hover {
+            border-color: #F39C12;
+            color: #F39C12;
+        }
+
+        .marcar-btn.marcada {
+            background: #FFF3E0;
+            border-color: #F39C12;
+            color: #E65100;
+        }
+
+        /* ===== BARRA DE PROGRESSO ===== */
+        .progress-container {
+            background: var(--branco);
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--sombra);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--cinza-claro);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--azul-ifpe), var(--verde-destaque));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: var(--cinza-escuro);
+        }
+
+        /* ===== NAVEGAÇÃO ===== */
+        .navegacao {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: var(--transicao);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn.anterior, .nav-btn.proxima {
+            background: var(--cinza-claro);
+            color: var(--preto);
+        }
+
+        .nav-btn.anterior:hover, .nav-btn.proxima:hover {
+            background: var(--cinza-medio);
+        }
+
+        .nav-btn.finalizar {
+            background: linear-gradient(135deg, var(--vermelho-erro) 0%, var(--vermelho-escuro) 100%);
+            color: var(--branco);
+        }
+
+        .nav-btn.finalizar:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== TELA DE RESULTADO ===== */
+        .resultado-container {
+            background: var(--branco);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--sombra);
+            text-align: center;
+        }
+
+        .resultado-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .resultado-titulo {
+            font-size: 2em;
+            color: var(--azul-ifpe);
+            margin-bottom: 10px;
+        }
+
+        .pontuacao {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--verde-destaque);
+            margin: 20px 0;
+        }
+
+        .pontuacao.baixa { color: var(--vermelho-erro); }
+        .pontuacao.media { color: #F39C12; }
+        .pontuacao.alta { color: var(--verde-destaque); }
+
+        .disciplinas-resultado {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .disciplina-card {
+            background: var(--cinza-claro);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .disciplina-card h4 {
+            color: var(--cinza-escuro);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .disciplina-card .score {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--azul-ifpe);
+        }
+
+        .botoes-resultado {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn-ver-erros {
+            background: linear-gradient(135deg, var(--azul-ifpe) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: var(--transicao);
+        }
+
+        .btn-refazer {
+            background: var(--branco);
+            color: var(--azul-ifpe);
+            border: 2px solid var(--azul-ifpe);
+            padding: 13px 33px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: var(--transicao);
+        }
+
+        .btn-ver-erros:hover, .btn-refazer:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra);
+        }
+
+        /* ===== TELA DE CORREÇÃO ===== */
+        .correcao-container {
+            background: var(--branco);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--sombra);
+            margin-bottom: 20px;
+        }
+
+        .correcao-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--vermelho-erro);
+        }
+
+        .correcao-header.correta {
+            border-bottom-color: var(--verde-destaque);
+        }
+
+        .status-icon {
+            font-size: 2em;
+        }
+
+        .correcao-titulo {
+            font-size: 1.1em;
+            color: var(--vermelho-erro);
+        }
+
+        .correcao-header.correta .correcao-titulo {
+            color: var(--verde-destaque);
+        }
+
+        .resposta-comparacao {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .resposta-box {
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .resposta-usuario {
+            background: #FFEBEE;
+            color: var(--vermelho-erro);
+        }
+
+        .resposta-correta {
+            background: #E8F5E9;
+            color: var(--verde-destaque);
+        }
+
+        .explicacao-box {
+            background: #E3F2FD;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--azul-ifpe);
+        }
+
+        .explicacao-box h4 {
+            color: var(--azul-escuro);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dica-ia {
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFF176 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #F9A825;
+        }
+
+        .dica-ia h4 {
+            color: #F57F17;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topico-info {
+            background: var(--cinza-claro);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .topico-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topico-item span:first-child {
+            color: var(--cinza-escuro);
+            font-size: 0.9em;
+        }
+
+        .topico-item span:last-child {
+            font-weight: 600;
+            color: var(--azul-ifpe);
+        }
+
+        /* ===== HIDDEN CLASS ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .questao-container, .tela-inicial, .resultado-container {
+                padding: 20px;
+            }
+
+            .questao-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .timer {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .navegacao {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .alternativa {
+                padding: 12px 15px;
+            }
+
+            .enunciado {
+                padding: 15px;
+            }
+
+            .botoes-resultado {
+                flex-direction: column;
+            }
+
+            .btn-ver-erros, .btn-refazer {
+                width: 100%;
+            }
+        }
+
+        /* ===== ANIMAÇÕES ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ===== SCROLL SUAVE ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== QUESTÕES NAVEGAÇÃO RÁPIDA ===== */
+        .nav-questoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--cinza-claro);
+            border-radius: 10px;
+        }
+
+        .nav-questao-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: var(--transicao);
+            background: var(--branco);
+            color: var(--preto);
+        }
+
+        .nav-questao-btn:hover {
+            background: var(--cinza-medio);
+        }
+
+        .nav-questao-btn.atual {
+            background: var(--azul-ifpe);
+            color: var(--branco);
+        }
+
+        .nav-questao-btn.respondida {
+            background: var(--verde-destaque);
+            color: var(--branco);
+        }
+
+        .nav-questao-btn.marcada {
+            border: 2px solid #F39C12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <h1>🎯 Simulado IFPE/ETEPE 2026</h1>
+            <p class="subtitulo">Preparação para Cursos Técnicos Integrados</p>
+        </header>
+
+        <!-- TELA INICIAL -->
+        <div id="tela-inicial" class="tela-inicial fade-in">
+            <h2>Bem-vindo ao Simulado!</h2>
+
+            <div class="info-box">
+                <h3>📋 Informações da Prova</h3>
+                <div class="info-item">
+                    <span class="emoji">📚</span>
+                    <span><strong>30 questões</strong> (10 Português, 10 Matemática, 4 Ciências, 3 História, 3 Geografia)</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">⏱️</span>
+                    <span><strong>3 horas</strong> de duração</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">✅</span>
+                    <span><strong>Correção automática</strong> com explicações detalhadas</span>
+                </div>
+                <div class="info-item">
+                    <span class="emoji">🤖</span>
+                    <span><strong>Dicas personalizadas</strong> de IA para cada erro</span>
+                </div>
+            </div>
+
+            <div id="historico" class="historico-box hidden">
+                <h3>📊 Seu Histórico</h3>
+                <div id="historico-content"></div>
+            </div>
+
+            <button class="btn-iniciar" onclick="iniciarSimulado()">
+                🚀 COMEÇAR SIMULADO
+            </button>
+        </div>
+
+        <!-- TELA DE QUESTÃO -->
+        <div id="tela-questao" class="hidden">
+            <!-- Barra de Progresso -->
+            <div class="progress-container fade-in">
+                <div class="progress-text">
+                    <span id="progresso-texto">Questão 1 de 30</span>
+                    <span id="respondidas-texto">Respondidas: 0/30</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progresso-fill" class="progress-fill" style="width: 3.33%"></div>
+                </div>
+            </div>
+
+            <!-- Navegação Rápida -->
+            <div id="nav-questoes" class="nav-questoes"></div>
+
+            <!-- Questão -->
+            <div class="questao-container fade-in">
+                <div class="questao-header">
+                    <div class="questao-info">
+                        <span id="questao-numero" class="questao-numero">Questão 1/30</span>
+                        <span id="disciplina-tag" class="disciplina-tag">Matemática</span>
+                        <span id="dificuldade-tag" class="disciplina-tag">Média</span>
+                    </div>
+                    <div id="timer" class="timer">
+                        <span>⏱️</span>
+                        <span id="timer-texto">03:00:00</span>
+                    </div>
+                </div>
+
+                <div id="enunciado" class="enunciado"></div>
+
+                <div id="alternativas" class="alternativas"></div>
+
+                <button id="btn-marcar" class="marcar-btn" onclick="toggleMarcar()">
+                    🚩 Marcar para revisar
+                </button>
+
+                <div class="navegacao">
+                    <button class="nav-btn anterior" onclick="questaoAnterior()">
+                        ◀ Anterior
+                    </button>
+                    <button class="nav-btn finalizar" onclick="finalizarSimulado()">
+                        ✓ Finalizar
+                    </button>
+                    <button class="nav-btn proxima" onclick="proximaQuestao()">
+                        Próxima ▶
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DE RESULTADO -->
+        <div id="tela-resultado" class="hidden">
+            <div class="resultado-container fade-in">
+                <div id="resultado-icon" class="resultado-icon">🎉</div>
+                <h2 class="resultado-titulo">Simulado Concluído!</h2>
+                <div id="pontuacao" class="pontuacao">24/30 (80%)</div>
+
+                <div id="disciplinas-resultado" class="disciplinas-resultado"></div>
+
+                <p id="msg-erros" style="color: var(--cinza-escuro); margin: 20px 0;"></p>
+
+                <div class="botoes-resultado">
+                    <button class="btn-ver-erros" onclick="verCorrecao()">
+                        📖 Ver Questões Erradas
+                    </button>
+                    <button class="btn-refazer" onclick="refazerSimulado()">
+                        🔄 Refazer Simulado
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DE CORREÇÃO -->
+        <div id="tela-correcao" class="hidden">
+            <div id="correcao-header-info" class="progress-container fade-in" style="text-align: center;">
+                <h3 style="color: var(--azul-escuro);">📖 Correção Detalhada</h3>
+                <p id="correcao-progresso" style="color: var(--cinza-escuro); margin-top: 8px;"></p>
+            </div>
+
+            <div id="correcoes-container"></div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn-ver-erros" onclick="voltarResultado()">
+                    ◀ Voltar ao Resultado
+                </button>
+                <button class="btn-refazer" onclick="refazerSimulado()">
+                    🔄 Refazer Simulado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== BANCO DE QUESTÕES (60 questões) =====
+        const bancoQuestoes = {
+            portugues: [
+                {
+                    id: 1,
+                    disciplina: "Português",
+                    enunciado: "No trecho 'Mas o gato se recusou', a conjunção 'mas' expressa:",
+                    alternativas: ["A) Adição", "B) Oposição", "C) Conclusão", "D) Explicação", "E) Alternância"],
+                    respostaCorreta: "B",
+                    explicacao: "A conjunção 'mas' é coordenativa adversativa, que expressa OPOSIÇÃO ou contraste entre ideias. Ela introduz uma ideia que se opõe ao que foi dito anteriormente. Pode ser substituída por 'porém', 'contudo', 'todavia', 'entretanto'. Exemplo: 'O gato estava com fome, MAS se recusou a comer.'",
+                    dificuldade: "fácil",
+                    topico: "Conjunções"
+                },
+                {
+                    id: 2,
+                    disciplina: "Português",
+                    enunciado: "Na frase 'Pesquisa que analisou nove países mostra que territórios reconhecidos por lei reduzem doenças', a palavra 'que' na primeira ocorrência é classificada como:",
+                    alternativas: ["A) Conjunção subordinativa", "B) Pronome relativo", "C) Advérbio de intensidade", "D) Conjunção coordenativa", "E) Preposição"],
+                    respostaCorreta: "B",
+                    explicacao: "O 'que' na primeira ocorrência é um PRONOME RELATIVO, pois retoma o substantivo 'Pesquisa' e introduz uma oração adjetiva. Teste: pode ser substituído por 'a qual' → 'Pesquisa A QUAL analisou...' funciona perfeitamente. Já o segundo 'que' é uma conjunção integrante que introduz uma oração substantiva objetiva direta.",
+                    dificuldade: "média",
+                    topico: "Pronomes"
+                },
+                {
+                    id: 3,
+                    disciplina: "Português",
+                    enunciado: "Assinale a alternativa em que a vírgula foi usada para isolar um vocativo:",
+                    alternativas: ["A) 'O professor, mestre em literatura, chegou cedo.'", "B) 'Maria, venha aqui agora!'", "C) 'Em São Paulo, chove muito.'", "D) 'Os alunos, os professores e os pais participaram.'", "E) 'Estudou muito, porém não passou.'"],
+                    respostaCorreta: "B",
+                    explicacao: "Vocativo é o termo que serve para chamar ou invocar alguém. Na alternativa B, 'Maria' é um vocativo, pois a pessoa está sendo chamada. As outras alternativas: A tem aposto, C marca inversão, D separa termos de mesma função, E separa orações coordenadas.",
+                    dificuldade: "fácil",
+                    topico: "Pontuação"
+                },
+                {
+                    id: 4,
+                    disciplina: "Português",
+                    enunciado: "No trecho 'Florestas mais íntegras podem ajudar a filtrar fumaça', o verbo 'podem' indica sentido de:",
+                    alternativas: ["A) Obrigatoriedade", "B) Possibilidade", "C) Efetividade", "D) Necessidade", "E) Certeza"],
+                    respostaCorreta: "B",
+                    explicacao: "O verbo 'poder' no sentido de 'podem ajudar' indica POSSIBILIDADE, ou seja, uma capacidade ou potencialidade, não uma certeza. Se fosse obrigatoriedade, seria 'devem'; se fosse certeza, seria 'vão' ou 'irão'. A escolha verbal indica que há chance de acontecer, mas não é garantido.",
+                    dificuldade: "fácil",
+                    topico: "Verbos"
+                },
+                {
+                    id: 5,
+                    disciplina: "Português",
+                    enunciado: "A palavra 'siamês' está acentuada pela regra das:",
+                    alternativas: ["A) Paroxítonas terminadas em 'a'", "B) Oxítonas terminadas em 'es'", "C) Paroxítonas terminadas em 's'", "D) Proparoxítonas", "E) Hiato"],
+                    respostaCorreta: "B",
+                    explicacao: "A palavra 'siamês' é uma OXÍTONA (sílaba tônica na última sílaba: si-a-MÊS) terminada em 'es'. As oxítonas terminadas em A(S), E(S), O(S), EM, ENS são acentuadas. Outros exemplos: você, português, robô, também, parabéns.",
+                    dificuldade: "média",
+                    topico: "Acentuação"
+                },
+                {
+                    id: 6,
+                    disciplina: "Português",
+                    enunciado: "No trecho 'Além disso, encontramos que o fator do reconhecimento legal se mostrou crucial', a expressão 'Além disso' foi usada para:",
+                    alternativas: ["A) Refutar uma ideia anterior", "B) Introduzir uma conclusão", "C) Adicionar uma nova informação", "D) Explicar uma causa", "E) Estabelecer uma condição"],
+                    respostaCorreta: "C",
+                    explicacao: "A expressão 'Além disso' é um OPERADOR ARGUMENTATIVO de ADIÇÃO. Ela serve para acrescentar uma nova informação àquela que já foi apresentada, reforçando o argumento. Indica que o autor vai somar um novo ponto ao que já foi dito, enriquecendo a argumentação.",
+                    dificuldade: "fácil",
+                    topico: "Coesão"
+                },
+                {
+                    id: 7,
+                    disciplina: "Português",
+                    enunciado: "A ironia é uma figura de linguagem que consiste em:",
+                    alternativas: ["A) Fazer uma comparação implícita", "B) Dizer o contrário do que se pensa", "C) Substituir uma palavra por outra relacionada", "D) Exagerar uma ideia", "E) Atribuir características humanas a objetos"],
+                    respostaCorreta: "B",
+                    explicacao: "A IRONIA consiste em dizer o contrário do que se pensa, geralmente com intenção crítica ou humorística. É muito comum em tirinhas e charges. Exemplo: dizer 'Que belo dia!' quando está chovendo e tudo deu errado. Não confundir com: metáfora (A), metonímia (C), hipérbole (D), personificação (E).",
+                    dificuldade: "fácil",
+                    topico: "Figuras de Linguagem"
+                },
+                {
+                    id: 8,
+                    disciplina: "Português",
+                    enunciado: "Identifique a oração que contém um sujeito composto:",
+                    alternativas: ["A) 'O gato miou alto.'", "B) 'O gato e o papagaio brigaram.'", "C) 'Havia muitos animais na casa.'", "D) 'Comprei um gato siamês.'", "E) 'Choveu muito ontem.'"],
+                    respostaCorreta: "B",
+                    explicacao: "Sujeito composto é aquele que tem DOIS OU MAIS núcleos. Em 'O gato e o papagaio brigaram', os núcleos do sujeito são 'gato' e 'papagaio'. A) tem sujeito simples (um núcleo: gato). C) e E) são orações sem sujeito (verbos impessoais). D) tem sujeito oculto/elíptico (eu).",
+                    dificuldade: "média",
+                    topico: "Sintaxe"
+                },
+                {
+                    id: 9,
+                    disciplina: "Português",
+                    enunciado: "No trecho 'Seus olhos são dois oceanos', há o uso de:",
+                    alternativas: ["A) Metonímia", "B) Hipérbole", "C) Metáfora", "D) Personificação", "E) Antítese"],
+                    respostaCorreta: "C",
+                    explicacao: "METÁFORA é uma comparação IMPLÍCITA, sem usar conectivos como 'como' ou 'parece'. A frase diz que os olhos SÃO oceanos (não 'são como'), caracterizando uma metáfora. Se fosse 'Seus olhos são como dois oceanos', seria um símile (comparação explícita).",
+                    dificuldade: "fácil",
+                    topico: "Figuras de Linguagem"
+                },
+                {
+                    id: 10,
+                    disciplina: "Português",
+                    enunciado: "A alternativa que apresenta uma palavra acentuada corretamente pela regra das proparoxítonas é:",
+                    alternativas: ["A) Café", "B) Fácil", "C) Médico", "D) Também", "E) Sofá"],
+                    respostaCorreta: "C",
+                    explicacao: "PROPAROXÍTONAS são palavras cuja sílaba tônica é a antepenúltima. TODAS as proparoxítonas são acentuadas. 'Médico' (MÉ-di-co) é proparoxítona. Café e sofá são oxítonas, fácil é paroxítona, também é oxítona.",
+                    dificuldade: "fácil",
+                    topico: "Acentuação"
+                },
+                {
+                    id: 11,
+                    disciplina: "Português",
+                    enunciado: "No texto jornalístico, o 'lead' é responsável por:",
+                    alternativas: ["A) Apresentar a conclusão da notícia", "B) Responder às perguntas básicas do fato", "C) Fazer a crítica do autor", "D) Apresentar dados estatísticos", "E) Expressar a opinião do jornalista"],
+                    respostaCorreta: "B",
+                    explicacao: "O LEAD é o primeiro parágrafo de uma notícia e deve responder às perguntas essenciais: QUEM, O QUÊ, QUANDO, ONDE, COMO e POR QUÊ. É a parte mais importante do texto jornalístico, pois resume a informação principal e atrai a atenção do leitor.",
+                    dificuldade: "média",
+                    topico: "Tipos Textuais"
+                },
+                {
+                    id: 12,
+                    disciplina: "Português",
+                    enunciado: "A conjunção 'porque' pode introduzir uma oração que exprime:",
+                    alternativas: ["A) Adição", "B) Oposição", "C) Causa", "D) Conclusão", "E) Alternância"],
+                    respostaCorreta: "C",
+                    explicacao: "'Porque' é uma conjunção subordinativa CAUSAL, introduzindo uma oração que indica a causa ou motivo de algo. Exemplo: 'Não foi à escola PORQUE estava doente.' Outras conjunções causais: 'pois', 'como', 'já que', 'uma vez que', 'visto que'.",
+                    dificuldade: "fácil",
+                    topico: "Conjunções"
+                },
+                {
+                    id: 13,
+                    disciplina: "Português",
+                    enunciado: "Em 'Li Machado de Assis', há o uso da figura de linguagem chamada:",
+                    alternativas: ["A) Metáfora", "B) Metonímia", "C) Hipérbole", "D) Eufemismo", "E) Ironia"],
+                    respostaCorreta: "B",
+                    explicacao: "METONÍMIA é a substituição de uma palavra por outra com ela relacionada. Nesse caso, o autor 'Machado de Assis' substitui a 'obra de Machado de Assis'. Outros exemplos: 'Li Camões' (a obra de), 'Gosto de Bach' (da música de), 'O Brasil venceu' (a seleção brasileira).",
+                    dificuldade: "média",
+                    topico: "Figuras de Linguagem"
+                },
+                {
+                    id: 14,
+                    disciplina: "Português",
+                    enunciado: "Identifique a alternativa em que o pronome oblíquo está usado corretamente:",
+                    alternativas: ["A) 'Eu vi ele na rua.'", "B) 'Eu o vi na rua.'", "C) 'Eu vi ele e ela.'", "D) 'Me deu o livro.'", "E) 'Entreguei o livro para ele.'"],
+                    respostaCorreta: "B",
+                    explicacao: "O pronome oblíquo 'o' é usado como objeto direto na norma culta. 'Eu o vi' está correto, pois 'o' substitui o objeto direto. Em A e C, 'ele' é pronome reto usado como objeto (coloquial). Em D, 'me' está em início de frase (incorreto na norma culta). E usa 'para ele' (correto, mas 'ele' é pronome reto após preposição).",
+                    dificuldade: "difícil",
+                    topico: "Pronomes"
+                },
+                {
+                    id: 15,
+                    disciplina: "Português",
+                    enunciado: "O pretérito imperfeito do indicativo expressa uma ação:",
+                    alternativas: ["A) Pontual, ocorrida no passado", "B) Habitual ou duradoura no passado", "C) Que vai ocorrer no futuro", "D) Que está ocorrendo agora", "E) Que terminou recentemente"],
+                    respostaCorreta: "B",
+                    explicacao: "O PRETÉRITO IMPERFEITO expressa uma ação passada HABITUAL ou DURADOURA, sem foco no momento exato de início ou fim. Exemplo: 'Antigamente, eu FAZIA (imperfeito) exercícios todos os dias.' Diferente do perfeito, que marca ação pontual: 'Ontem eu FIZ (perfeito) exercícios.'",
+                    dificuldade: "média",
+                    topico: "Verbos"
+                },
+                {
+                    id: 16,
+                    disciplina: "Português",
+                    enunciado: "A locução verbal é formada por:",
+                    alternativas: ["A) Verbo + substantivo", "B) Verbo auxiliar + verbo principal", "C) Dois verbos principais", "D) Verbo + adjetivo", "E) Verbo + advérbio"],
+                    respostaCorreta: "B",
+                    explicacao: "LOCUÇÃO VERBAL é formada por um VERBO AUXILIAR (ter, haver, ser, estar) + verbo principal no infinitivo, gerúndio ou particípio. Exemplos: 'Tenho estudado' (ter + particípio), 'Estou estudando' (estar + gerúndio), 'Vou estudar' (ir + infinitivo).",
+                    dificuldade: "fácil",
+                    topico: "Verbos"
+                },
+                {
+                    id: 17,
+                    disciplina: "Português",
+                    enunciado: "Aspas são usadas para:",
+                    alternativas: ["A) Destacar apenas números", "B) Indicar citações diretas e destacar palavras", "C) Separar orações", "D) Substituir travessões", "E) Indicar diálogos apenas"],
+                    respostaCorreta: "B",
+                    explicacao: "As ASPAS são usadas para: 1) Indicar citações diretas (ex: O autor disse: 'A educação é fundamental'); 2) Destacar palavras estrangeiras (ex: 'software'); 3) Destacar gírias ou palavras em sentido não literal (ex: Ele é muito 'esperto'); 4) Destacar títulos de obras.",
+                    dificuldade: "fácil",
+                    topico: "Pontuação"
+                },
+                {
+                    id: 18,
+                    disciplina: "Português",
+                    enunciado: "Na frase 'O professor, mestre em literatura, chegou cedo', os termos entre vírgulas são:",
+                    alternativas: ["A) Vocativo", "B) Aposto", "C) Objeto direto", "D) Adjunto adverbial", "E) Predicativo"],
+                    respostaCorreta: "B",
+                    explicacao: "APOSTO é um termo que explica, resume ou identifica outro termo da oração. Nesse caso, 'mestre em literatura' explica quem é 'o professor'. O aposto é isolado por vírgulas ou outros sinais de pontuação. Diferente do vocativo (que chama alguém), o aposto explica ou identifica.",
+                    dificuldade: "média",
+                    topico: "Sintaxe"
+                },
+                {
+                    id: 19,
+                    disciplina: "Português",
+                    enunciado: "Palavras como 'sempre', 'nunca', 'todo', 'nenhum', quando usadas em alternativas de questões, costumam indicar:",
+                    alternativas: ["A) Respostas corretas", "B) Generalizações, muitas vezes incorretas", "C) Respostas parciais", "D) Informações específicas", "E) Exemplos concretos"],
+                    respostaCorreta: "B",
+                    explicacao: "Palavras como 'sempre', 'nunca', 'todo', 'nenhum' indicam GENERALIZAÇÕES ABSOLUTAS. Em questões de interpretação, essas alternativas costumam estar ERRADAS, pois é raro que algo seja absoluto. Fique atento a esses 'extremos' e prefira alternativas mais moderadas.",
+                    dificuldade: "fácil",
+                    topico: "Estratégias de Prova"
+                },
+                {
+                    id: 20,
+                    disciplina: "Português",
+                    enunciado: "A coesão textual é responsável por:",
+                    alternativas: ["A) Dar beleza ao texto", "B) Conectar as partes do texto de forma lógica", "C) Aumentar o vocabulário", "D) Criar personagens", "E) Definir o gênero textual"],
+                    respostaCorreta: "B",
+                    explicacao: "COESÃO TEXTUAL é a conexão lógica entre as partes do texto, garantindo que ele faça sentido. Elementos coesivos incluem: pronomes (que retomam termos), conjunções (que conectam orações), sinônimos, elipse. Sem coesão, o texto fica fragmentado e confuso.",
+                    dificuldade: "fácil",
+                    topico: "Coesão e Coerência"
+                }
+            ],
+            matematica: [
+                {
+                    id: 21,
+                    disciplina: "Matemática",
+                    enunciado: "Em uma cidade, 1/4 da população teve Zika vírus e 1/3 teve Dengue. O restante teve malária. Qual fração da população teve malária?",
+                    alternativas: ["A) 5/12", "B) 7/12", "C) 1/4", "D) 1/3", "E) 1/2"],
+                    respostaCorreta: "A",
+                    explicacao: "PASSO 1: Encontre o MMC de 4 e 3, que é 12.\nPASSO 2: Converta as frações: 1/4 = 3/12 e 1/3 = 4/12.\nPASSO 3: Some as frações de Zika e Dengue: 3/12 + 4/12 = 7/12.\nPASSO 4: Calcule o restante (malária): 12/12 - 7/12 = 5/12.\nRESPOSTA: 5/12 da população teve malária.",
+                    dificuldade: "média",
+                    topico: "Frações"
+                },
+                {
+                    id: 22,
+                    disciplina: "Matemática",
+                    enunciado: "Uma pessoa tinha um terreno de 32.000 m². Ela vendeu 1/5 do mesmo, reservou 3/8 para si e dividiu o resto em 50 lotes iguais. Qual é a área de cada lote?",
+                    alternativas: ["A) 260 m²", "B) 272 m²", "C) 284 m²", "D) 252 m²", "E) 274 m²"],
+                    respostaCorreta: "B",
+                    explicacao: "PASSO 1: Calcule o que foi vendido: 32.000 × 1/5 = 6.400 m².\nPASSO 2: Calcule o que reservou: 32.000 × 3/8 = 12.000 m².\nPASSO 3: Calcule o total usado: 6.400 + 12.000 = 18.400 m².\nPASSO 4: Calcule o restante: 32.000 - 18.400 = 13.600 m².\nPASSO 5: Divida por 50 lotes: 13.600 ÷ 50 = 272 m² por lote.",
+                    dificuldade: "média",
+                    topico: "Frações"
+                },
+                {
+                    id: 23,
+                    disciplina: "Matemática",
+                    enunciado: "Se o custo total de uma viagem para 5 pessoas é R$ 3.500,00, e o valor por pessoa não muda, o pacote para 8 pessoas custará:",
+                    alternativas: ["A) R$ 4.600,00", "B) R$ 5.600,00", "C) R$ 6.600,00", "D) R$ 7.600,00", "E) R$ 8.600,00"],
+                    respostaCorreta: "B",
+                    explicacao: "PASSO 1: Calcule o valor por pessoa: R$ 3.500 ÷ 5 = R$ 700 por pessoa.\nPASSO 2: Multiplique por 8 pessoas: R$ 700 × 8 = R$ 5.600,00.\nEsta é uma regra de três simples DIRETA: mais pessoas, mais custo (proporção direta).",
+                    dificuldade: "fácil",
+                    topico: "Regra de Três"
+                },
+                {
+                    id: 24,
+                    disciplina: "Matemática",
+                    enunciado: "Em Recife, a tarifa de ônibus é de R$ 4,60. Se houver um aumento de 6%, o novo valor será de, aproximadamente:",
+                    alternativas: ["A) R$ 4,84", "B) R$ 4,86", "C) R$ 4,88", "D) R$ 4,90", "E) R$ 4,92"],
+                    respostaCorreta: "C",
+                    explicacao: "PASSO 1: Calcule 6% de R$ 4,60: 4,60 × 0,06 = R$ 0,276.\nPASSO 2: Some ao valor original: 4,60 + 0,276 = R$ 4,876.\nPASSO 3: Arredonde: R$ 4,88.\nOUTRO MÉTODO: Multiplique por 1,06 → 4,60 × 1,06 = R$ 4,876 ≈ R$ 4,88.",
+                    dificuldade: "fácil",
+                    topico: "Porcentagem"
+                },
+                {
+                    id: 25,
+                    disciplina: "Matemática",
+                    enunciado: "Um campo de futebol oficial tem dimensões de 105m × 68m. Quantos campos de futebol cabem em uma área de 74.000.000 m²?",
+                    alternativas: ["A) 740.000", "B) 74.000", "C) 7.400", "D) 10.344", "E) 103.440"],
+                    respostaCorreta: "D",
+                    explicacao: "PASSO 1: Calcule a área do campo: 105 × 68 = 7.140 m².\nPASSO 2: Divida a área total pela área do campo: 74.000.000 ÷ 7.140 ≈ 10.364 campos.\nArredondando: aproximadamente 10.344 campos.\nDICA: Sempre verifique as unidades! km² para m² = × 1.000.000.",
+                    dificuldade: "média",
+                    topico: "Geometria"
+                },
+                {
+                    id: 26,
+                    disciplina: "Matemática",
+                    enunciado: "As notas de 5 alunos foram: 7,5; 8,0; 6,0; 9,0 e 7,0. A média aritmética dessas notas é:",
+                    alternativas: ["A) 6,6", "B) 6,9", "C) 7,2", "D) 7,5", "E) 7,8"],
+                    respostaCorreta: "D",
+                    explicacao: "PASSO 1: Some todas as notas: 7,5 + 8,0 + 6,0 + 9,0 + 7,0 = 37,5.\nPASSO 2: Divida pela quantidade de alunos: 37,5 ÷ 5 = 7,5.\nFÓRMULA: Média Aritmética = Soma dos valores ÷ Quantidade de valores.",
+                    dificuldade: "fácil",
+                    topico: "Estatística"
+                },
+                {
+                    id: 27,
+                    disciplina: "Matemática",
+                    enunciado: "Uma torneira enche um tanque em 4 horas, enquanto outra o enche em 5 horas. Em quantas horas as duas juntas encherão o tanque?",
+                    alternativas: ["A) 20/9 horas", "B) 2 horas", "C) 7/3 horas", "D) 3 horas", "E) 8/3 horas"],
+                    respostaCorreta: "A",
+                    explicacao: "PASSO 1: Calcule a vazão de cada torneira: 1ª = 1/4 tanque/hora, 2ª = 1/5 tanque/hora.\nPASSO 2: Some as vazões: 1/4 + 1/5 = 5/20 + 4/20 = 9/20 tanque/hora.\nPASSO 3: Inverta para achar o tempo: 20/9 horas ≈ 2,22 horas (2h 13min).\nFÓRMULA: 1/T = 1/t₁ + 1/t₂",
+                    dificuldade: "média",
+                    topico: "Regra de Três"
+                },
+                {
+                    id: 28,
+                    disciplina: "Matemática",
+                    enunciado: "Resolvendo a equação 2x + 6 = 10, encontramos x = ?",
+                    alternativas: ["A) 1", "B) 2", "C) 3", "D) 4", "E) 5"],
+                    respostaCorreta: "B",
+                    explicacao: "PASSO 1: Isole o termo com x: 2x + 6 = 10 → 2x = 10 - 6 → 2x = 4.\nPASSO 2: Divida por 2: x = 4 ÷ 2 = 2.\nVERIFICAÇÃO: 2 × 2 + 6 = 4 + 6 = 10 ✓.",
+                    dificuldade: "fácil",
+                    topico: "Equações"
+                },
+                {
+                    id: 29,
+                    disciplina: "Matemática",
+                    enunciado: "Na equação do 2º grau x² - 5x + 6 = 0, quais são as raízes?",
+                    alternativas: ["A) x = 1 e x = 6", "B) x = 2 e x = 3", "C) x = -2 e x = -3", "D) x = 1 e x = -6", "E) x = -1 e x = 6"],
+                    respostaCorreta: "B",
+                    explicacao: "MÉTODO 1 - Soma e Produto: S = 5, P = 6. Quais números somam 5 e multiplicam 6? 2 e 3!\nMÉTODO 2 - Bhaskara: a=1, b=-5, c=6.\nΔ = (-5)² - 4×1×6 = 25 - 24 = 1.\nx = (5 ± √1)/2 = (5 ± 1)/2.\nx₁ = 6/2 = 3, x₂ = 4/2 = 2.\nRaízes: x = 2 e x = 3.",
+                    dificuldade: "média",
+                    topico: "Equações"
+                },
+                {
+                    id: 30,
+                    disciplina: "Matemática",
+                    enunciado: "Um quadrado tem lado de 8 cm. Qual é sua área e seu perímetro?",
+                    alternativas: ["A) Área = 64 cm² e Perímetro = 32 cm", "B) Área = 32 cm² e Perímetro = 16 cm", "C) Área = 64 cm² e Perímetro = 16 cm", "D) Área = 16 cm² e Perímetro = 32 cm", "E) Área = 32 cm² e Perímetro = 32 cm"],
+                    respostaCorreta: "A",
+                    explicacao: "Área do quadrado = lado × lado = 8 × 8 = 64 cm².\nPerímetro do quadrado = 4 × lado = 4 × 8 = 32 cm.\nDICA: Perímetro é a soma de todos os lados; área é o espaço interno.",
+                    dificuldade: "fácil",
+                    topico: "Geometria"
+                },
+                {
+                    id: 31,
+                    disciplina: "Matemática",
+                    enunciado: "Um triângulo retângulo tem catetos de 3 cm e 4 cm. Qual é a medida da hipotenusa?",
+                    alternativas: ["A) 5 cm", "B) 6 cm", "C) 7 cm", "D) 8 cm", "E) 9 cm"],
+                    respostaCorreta: "A",
+                    explicacao: "TEOREMA DE PITÁGORAS: a² = b² + c² (onde a é a hipotenusa).\na² = 3² + 4² = 9 + 16 = 25.\na = √25 = 5 cm.\nDICA: Esse é o famoso triângulo pitagórico 3-4-5!",
+                    dificuldade: "fácil",
+                    topico: "Geometria"
+                },
+                {
+                    id: 32,
+                    disciplina: "Matemática",
+                    enunciado: "Uma loja oferece 20% de desconto em um produto de R$ 150,00. Qual é o valor do desconto e o preço final?",
+                    alternativas: ["A) Desconto: R$ 20,00; Final: R$ 130,00", "B) Desconto: R$ 30,00; Final: R$ 120,00", "C) Desconto: R$ 25,00; Final: R$ 125,00", "D) Desconto: R$ 15,00; Final: R$ 135,00", "E) Desconto: R$ 35,00; Final: R$ 115,00"],
+                    respostaCorreta: "B",
+                    explicacao: "PASSO 1: Calcule o desconto: 20% de R$ 150 = 150 × 0,20 = R$ 30,00.\nPASSO 2: Calcule o preço final: 150 - 30 = R$ 120,00.\nOUTRO MÉTODO: Preço final = 150 × 0,80 = R$ 120,00 (multiplicando por 1 - 0,20).",
+                    dificuldade: "fácil",
+                    topico: "Porcentagem"
+                },
+                {
+                    id: 33,
+                    disciplina: "Matemática",
+                    enunciado: "Se 5 operários constróem um muro em 12 dias, quantos dias 8 operários levariam para construir o mesmo muro?",
+                    alternativas: ["A) 7,5 dias", "B) 8 dias", "C) 6 dias", "D) 10 dias", "E) 9 dias"],
+                    respostaCorreta: "A",
+                    explicacao: "Esta é uma REGRA DE TRÊS INVERSA: mais operários, menos dias.\n5 operários → 12 dias\n8 operários → x dias\nPASSO 1: Inverta uma razão: 5/8 = x/12.\nPASSO 2: Multiplique cruzado: 8 × x = 5 × 12.\nPASSO 3: Resolva: 8x = 60 → x = 60/8 = 7,5 dias.",
+                    dificuldade: "média",
+                    topico: "Regra de Três"
+                },
+                {
+                    id: 34,
+                    disciplina: "Matemática",
+                    enunciado: "Qual é a área de um círculo com raio de 7 cm? (Considere π = 22/7)",
+                    alternativas: ["A) 144 cm²", "B) 154 cm²", "C) 164 cm²", "D) 134 cm²", "E) 174 cm²"],
+                    respostaCorreta: "B",
+                    explicacao: "FÓRMULA: Área do círculo = π × r².\nA = (22/7) × 7² = (22/7) × 49.\nA = 22 × 7 = 154 cm².\nDICA: Usando π ≈ 3,14, seria: 3,14 × 49 ≈ 153,86 cm².",
+                    dificuldade: "média",
+                    topico: "Geometria"
+                },
+                {
+                    id: 35,
+                    disciplina: "Matemática",
+                    enunciado: "Um carro viaja a 90 km/h. Quantos quilômetros ele percorre em 2 horas e 30 minutos?",
+                    alternativas: ["A) 180 km", "B) 200 km", "C) 225 km", "D) 250 km", "E) 270 km"],
+                    respostaCorreta: "C",
+                    explicacao: "PASSO 1: Converta 2h 30min para horas: 2 + 0,5 = 2,5 horas.\nPASSO 2: Aplique a fórmula: Distância = Velocidade × Tempo.\nD = 90 km/h × 2,5 h = 225 km.\nVERIFICAÇÃO: 2h = 180 km, 30min = 45 km, Total = 225 km.",
+                    dificuldade: "fácil",
+                    topico: "Grandezas"
+                },
+                {
+                    id: 36,
+                    disciplina: "Matemática",
+                    enunciado: "Na função f(x) = 2x + 3, qual é o valor de f(4)?",
+                    alternativas: ["A) 8", "B) 9", "C) 10", "D) 11", "E) 12"],
+                    respostaCorreta: "D",
+                    explicacao: "Substitua x por 4 na função:\nf(4) = 2 × 4 + 3 = 8 + 3 = 11.\nEsta é uma FUNÇÃO AFIM (1º grau) com a = 2 (coeficiente angular) e b = 3 (coeficiente linear).",
+                    dificuldade: "fácil",
+                    topico: "Funções"
+                },
+                {
+                    id: 37,
+                    disciplina: "Matemática",
+                    enunciado: "Um produto que custava R$ 80,00 teve um aumento e passou a custar R$ 100,00. Qual foi a porcentagem de aumento?",
+                    alternativas: ["A) 20%", "B) 25%", "C) 30%", "D) 15%", "E) 35%"],
+                    respostaCorreta: "B",
+                    explicacao: "PASSO 1: Calcule o aumento: 100 - 80 = R$ 20,00.\nPASSO 2: Divida pelo valor ORIGINAL: 20/80 = 0,25.\nPASSO 3: Converta para porcentagem: 0,25 × 100 = 25%.\nERRO COMUM: Dividir pelo valor final (20/100 = 20%). INCORRETO!",
+                    dificuldade: "média",
+                    topico: "Porcentagem"
+                },
+                {
+                    id: 38,
+                    disciplina: "Matemática",
+                    enunciado: "A média aritmética de 12 números é 57. Se retirarmos dois números que somam 34, qual será a nova média dos 10 números restantes?",
+                    alternativas: ["A) 55", "B) 57", "C) 60", "D) 62", "E) 65"],
+                    respostaCorreta: "E",
+                    explicacao: "PASSO 1: Calcule a soma total original: 12 × 57 = 684.\nPASSO 2: Subtraia os dois números: 684 - 34 = 650.\nPASSO 3: Divida pelos 10 números restantes: 650 ÷ 10 = 65.\nA nova média é 65.",
+                    dificuldade: "média",
+                    topico: "Estatística"
+                },
+                {
+                    id: 39,
+                    disciplina: "Matemática",
+                    enunciado: "Converta 2,5 km² para m²:",
+                    alternativas: ["A) 2.500 m²", "B) 25.000 m²", "C) 250.000 m²", "D) 2.500.000 m²", "E) 25.000.000 m²"],
+                    respostaCorreta: "D",
+                    explicacao: "CONVERSÃO: 1 km² = 1.000.000 m² (10⁶ m²).\n2,5 km² = 2,5 × 1.000.000 = 2.500.000 m².\nDICA: Para converter km² para m², multiplique por 1.000.000.\nPara converter m² para km², divida por 1.000.000.",
+                    dificuldade: "fácil",
+                    topico: "Unidades"
+                },
+                {
+                    id: 40,
+                    disciplina: "Matemática",
+                    enunciado: "Numa prova com peso 2 para Matemática e peso 3 para Português, um aluno tirou 7 em Matemática e 8 em Português. Qual é sua média ponderada?",
+                    alternativas: ["A) 7,4", "B) 7,5", "C) 7,6", "D) 7,8", "E) 8,0"],
+                    respostaCorreta: "C",
+                    explicacao: "FÓRMULA: Média Ponderada = (v₁×p₁ + v₂×p₂) ÷ (p₁ + p₂).\nMP = (7×2 + 8×3) ÷ (2 + 3).\nMP = (14 + 24) ÷ 5 = 38 ÷ 5 = 7,6.\nDICA: Na média ponderada, cada nota é multiplicada pelo seu peso.",
+                    dificuldade: "média",
+                    topico: "Estatística"
+                }
+            ],
+            ciencias: [
+                {
+                    id: 41,
+                    disciplina: "Ciências",
+                    enunciado: "São exemplos de fatores ABIÓTICOS de um ecossistema:",
+                    alternativas: ["A) Nutrientes, água, chuva e umidade", "B) Fungos, água, temperatura e vento", "C) Gases, sol, bactérias e nutrientes", "D) Plantas, animais, fungos e bactérias", "E) Árvore, pássaro, musgo e peixe"],
+                    respostaCorreta: "A",
+                    explicacao: "Fatores ABIÓTICOS são os componentes NÃO VIVOS de um ecossistema. Incluem: água, luz, temperatura, solo, ar, nutrientes minerais, umidade, vento.\nFatores BIÓTICOS são os componentes VIVOS: plantas, animais, fungos, bactérias.\nNa alternativa A, todos são abióticos.",
+                    dificuldade: "fácil",
+                    topico: "Ecologia"
+                },
+                {
+                    id: 42,
+                    disciplina: "Ciências",
+                    enunciado: "Na cadeia alimentar, os PRODUTORES são organismos que:",
+                    alternativas: ["A) Consomem outros seres vivos", "B) Realizam fotossíntese", "C) Decompoem matéria orgânica", "D) Parasitam outros organismos", "E) Se alimentam de detritos"],
+                    respostaCorreta: "B",
+                    explicacao: "PRODUTORES (ou autótrofos) são organismos que PRODUZEM seu próprio alimento através da FOTOSSÍNTESE, utilizando luz solar, água e gás carbônico. São principalmente plantas, algas e algumas bactérias. Eles formam a BASE da cadeia alimentar.",
+                    dificuldade: "fácil",
+                    topico: "Ecologia"
+                },
+                {
+                    id: 43,
+                    disciplina: "Ciências",
+                    enunciado: "As briófitas, como os musgos, são plantas que:",
+                    alternativas: ["A) Têm flores e frutos", "B) Têm sementes expostas", "C) Não têm vasos condutores", "D) Têm frutos verdadeiros", "E) São plantas aquáticas apenas"],
+                    respostaCorreta: "C",
+                    explicacao: "BRIÓFITAS (musgos e hepáticas) são plantas PRIMITIVAS que NÃO POSSUEM VASOS CONDUTORES (xilema e floema). Por isso, são pequenas e vivem em ambientes úmidos, absorvendo água diretamente pelo corpo. Não têm flores, sementes nem frutos.",
+                    dificuldade: "média",
+                    topico: "Classificação dos Seres Vivos"
+                },
+                {
+                    id: 44,
+                    disciplina: "Ciências",
+                    enunciado: "A hematose, troca de gases que ocorre nos pulmões, consiste na:",
+                    alternativas: ["A) Transformação de gás carbônico em oxigênio", "B) Absorção de oxigênio e liberação de gás carbônico", "C) Produção de energia nas células", "D) Filtragem do sangue pelos rins", "E) Digestão de alimentos no estômago"],
+                    respostaCorreta: "B",
+                    explicacao: "HEMATOSE é a TROCA GASOSA que ocorre nos ALVÉOLOS PULMONARES. O sangue chega com gás carbônico (CO₂) proveniente das células e sai com oxigênio (O₂) captado do ar. Essa troca acontece por difusão: O₂ entra no sangue, CO₂ sai para ser eliminado na expiração.",
+                    dificuldade: "média",
+                    topico: "Corpo Humano"
+                },
+                {
+                    id: 45,
+                    disciplina: "Ciências",
+                    enunciado: "No sistema digestório, o órgão responsável pela produção da BILE é:",
+                    alternativas: ["A) Estômago", "B) Pâncreas", "C) Fígado", "D) Intestino delgado", "E) Vesícula biliar"],
+                    respostaCorreta: "C",
+                    explicacao: "O FÍGADO produz a BILE, um líquido que auxilia na digestão de GORDURAS. A bile é armazenada na VESÍCULA BILIAR e liberada no intestino delgado quando necessário. O PÂNCREAS produz enzimas digestivas (amilase, lipase, tripsina) e o estômago produz suco gástrico.",
+                    dificuldade: "média",
+                    topico: "Corpo Humano"
+                },
+                {
+                    id: 46,
+                    disciplina: "Ciências",
+                    enunciado: "São estados físicos da matéria:",
+                    alternativas: ["A) Líquido, gasoso e plasma", "B) Sólido, líquido e gasoso", "C) Gasoso, plasma e radioativo", "D) Sólido, plasma e líquido", "E) Líquido, pastoso e gasoso"],
+                    respostaCorreta: "B",
+                    explicacao: "Os três estados físicos fundamentais da matéria são:\n- SÓLIDO: forma e volume definidos\n- LÍQUIDO: volume definido, forma variável\n- GASOSO: volume e forma variáveis\nPlasma é um quarto estado, mas não é cobrado no ensino fundamental.",
+                    dificuldade: "fácil",
+                    topico: "Matéria"
+                },
+                {
+                    id: 47,
+                    disciplina: "Ciências",
+                    enunciado: "Uma mistura HOMOGÊNEA se caracteriza por:",
+                    alternativas: ["A) Ter duas ou mais fases visíveis", "B) Ter uma única fase visível", "C) Ser formada apenas por líquidos", "D) Não poder ser separada", "E) Ter componentes que não se misturam"],
+                    respostaCorreta: "B",
+                    explicacao: "Mistura HOMOGÊNEA tem UMA ÚNICA FASE visível, ou seja, é uniforme em toda sua extensão. Exemplos: água + sal (solução), ar atmosférico, água + açúcar.\nMistura HETEROGÊNEA tem DUAS OU MAIS fases visíveis. Exemplos: água + óleo, granito, água + areia.",
+                    dificuldade: "fácil",
+                    topico: "Matéria"
+                },
+                {
+                    id: 48,
+                    disciplina: "Ciências",
+                    enunciado: "As angiospermas são plantas que se caracterizam por apresentar:",
+                    alternativas: ["A) Apenas flores", "B) Sementes expostas", "C) Flores e frutos", "D) Ausência de vasos condutores", "E) Apenas raízes e caules"],
+                    respostaCorreta: "C",
+                    explicacao: "ANGIOSPERMAS são as plantas mais evoluídas e se caracterizam por apresentar FLORES e FRUTOS. O fruto protege a semente e auxilia na dispersão. Exemplos: roseira, mangueira, feijoeiro. Gimnospermas têm sementes expostas (pinheiros).",
+                    dificuldade: "média",
+                    topico: "Classificação dos Seres Vivos"
+                },
+                {
+                    id: 49,
+                    disciplina: "Ciências",
+                    enunciado: "No sistema urinário, a função dos RINS é:",
+                    alternativas: ["A) Armazenar urina", "B) Filtrar o sangue e produzir urina", "C) Transportar urina para a bexiga", "D) Eliminar urina para o exterior", "E) Produzir hormônios"],
+                    respostaCorreta: "B",
+                    explicacao: "Os RINS são os órgãos responsáveis por FILTRAR O SANGUE, removendo impurezas e substâncias em excesso, produzindo a URINA. A urina passa pelos ureteres até a bexiga (armazenamento) e é eliminada pela uretra. Os rins também regulam o equilíbrio de água e sais no corpo.",
+                    dificuldade: "fácil",
+                    topico: "Corpo Humano"
+                },
+                {
+                    id: 50,
+                    disciplina: "Ciências",
+                    enunciado: "A velocidade média é calculada pela fórmula:",
+                    alternativas: ["A) V = distância × tempo", "B) V = distância / tempo", "C) V = tempo / distância", "D) V = distância + tempo", "E) V = distância - tempo"],
+                    respostaCorreta: "B",
+                    explicacao: "VELOCIDADE MÉDIA = DISTÂNCIA PERCORRIDA ÷ TEMPO GASTO.\nV = d/t\nUnidades comuns: km/h (quilômetros por hora) ou m/s (metros por segundo).\nExemplo: Se um carro percorre 180 km em 2 horas, V = 180/2 = 90 km/h.",
+                    dificuldade: "fácil",
+                    topico: "Física Básica"
+                }
+            ],
+            historia: [
+                {
+                    id: 51,
+                    disciplina: "História",
+                    enunciado: "A Ditadura Militar no Brasil durou de 1964 a 1985. Uma de suas características foi:",
+                    alternativas: ["A) Liberdade de imprensa total", "B) Censura aos meios de comunicação", "C) Voto direto para presidente em todo período", "D) Fortalecimento da democracia", "E) Inexistência de repressão política"],
+                    respostaCorreta: "B",
+                    explicacao: "A DITADURA MILITAR (1964-1985) foi marcada por: CENSURA aos meios de comunicação, REPRESSÃO POLÍTICA, perseguição a opositores, tortura, AI-5 (fechamento do Congresso). O 'Milagre Econômico' (1968-1973) trouxe crescimento, mas com concentração de renda. A Lei da Anistia (1979) permitiu a redemocratização.",
+                    dificuldade: "média",
+                    topico: "Ditadura Militar"
+                },
+                {
+                    id: 52,
+                    disciplina: "História",
+                    enunciado: "A Transamazônica foi construída durante qual período histórico?",
+                    alternativas: ["A) Estado Novo (Era Vargas)", "B) República Oligárquica", "C) Governo JK", "D) Império de D. Pedro II", "E) Ditadura Militar (governo Médici)"],
+                    respostaCorreta: "E",
+                    explicacao: "A TRANSAMAZÔNICA foi construída nos anos 1970, durante a DITADURA MILITAR, no governo do general MÉDICI (1969-1974). Era parte dos 'grandes projetos' do regime, com o lema 'Integrar para não entregar'. A obra teve grandes impactos ambientais e sociais na Amazônia.",
+                    dificuldade: "média",
+                    topico: "Ditadura Militar"
+                },
+                {
+                    id: 53,
+                    disciplina: "História",
+                    enunciado: "A Lei Áurea, assinada em 13 de maio de 1888, determinou:",
+                    alternativas: ["A) A independência do Brasil", "B) A abolição da escravidão", "C) A proclamação da República", "D) O fim da monarquia", "E) O voto feminino"],
+                    respostaCorreta: "B",
+                    explicacao: "A LEI ÁUREA, assinada pela Princesa Isabel em 13 de maio de 1888, ABOLIU A ESCRAVIDÃO no Brasil. O Brasil foi o ÚLTIMO país das Américas a abolir a escravidão. A lei não previu integração dos ex-escravizados à sociedade, gerando problemas sociais que perduram até hoje.",
+                    dificuldade: "fácil",
+                    topico: "Escravidão"
+                },
+                {
+                    id: 54,
+                    disciplina: "História",
+                    enunciado: "A República Velha (1889-1930) foi caracterizada por:",
+                    alternativas: ["A) Voto secreto e democrático", "B) Coronelismo e voto de cabresto", "C) Fortalecimento dos partidos políticos", "D) Participação popular ativa", "E) Eleições livres e transparentes"],
+                    respostaCorreta: "B",
+                    explicacao: "A REPÚBLICA VELHA foi marcada pelo CORONELISMO (poder dos fazendeiros locais), VOTO DE CABRESTO (manipulação eleitoral), e POLÍTICA DO CAFÉ-COM-LEITE (alternância entre SP e MG na presidência). O voto era aberto, facilitando a coerção. A Revolução de 1930 encerrou esse período.",
+                    dificuldade: "média",
+                    topico: "Brasil República"
+                },
+                {
+                    id: 55,
+                    disciplina: "História",
+                    enunciado: "A Proclamação da República no Brasil ocorreu em:",
+                    alternativas: ["A) 7 de setembro de 1822", "B) 15 de novembro de 1889", "C) 13 de maio de 1888", "D) 22 de abril de 1500", "E) 21 de abril de 1960"],
+                    respostaCorreta: "B",
+                    explicacao: "A PROCLAMAÇÃO DA REPÚBLICA ocorreu em 15 DE NOVEMBRO DE 1889, liderada pelo Marechal Deodoro da Fonseca. O Imperador D. Pedro II foi deposto e a família real exilada. Foi um golpe militar com apoio de setores agrários descontentes com a abolição.",
+                    dificuldade: "fácil",
+                    topico: "Brasil República"
+                },
+                {
+                    id: 56,
+                    disciplina: "História",
+                    enunciado: "A Segunda Guerra Mundial (1939-1945) opôs os países do Eixo aos Aliados. Eram países do EIXO:",
+                    alternativas: ["A) Alemanha, Itália e Japão", "B) França, Inglaterra e EUA", "C) Brasil, Argentina e Chile", "D) Rússia, China e Inglaterra", "E) Portugal, Espanha e Itália"],
+                    respostaCorreta: "A",
+                    explicacao: "O EIXO era formado por: ALEMANHA (Hitler), ITÁLIA (Mussolini) e JAPÃO. Os ALIADOS eram: Inglaterra, França, URSS, EUA (após 1941) e Brasil (após 1942). O Holocausto foi o genocídio de milhões de judeus e outros grupos pelo regime nazista alemão.",
+                    dificuldade: "fácil",
+                    topico: "História Mundial"
+                },
+                {
+                    id: 57,
+                    disciplina: "História",
+                    enunciado: "A Lei da Anistia de 1979, durante a Ditadura Militar, foi polêmica porque:",
+                    alternativas: ["A) Libertou apenas presos comuns", "B) Perdoou presos políticos E torturadores", "C) Concedeu direitos apenas aos militares", "D) Foi rejeitada pelo governo", "E) Aplicou-se apenas a um lado do conflito"],
+                    respostaCorreta: "B",
+                    explicacao: "A LEI DA ANISTIA (1979) foi polêmica por ser BILATERAL: perdoou tanto os PRESOS POLÍTICOS quanto os AGENTES DO REGIME que cometeram torturas e crimes. Isso impediu a punição dos torturadores, gerando debates até hoje sobre justiça de transição no Brasil.",
+                    dificuldade: "difícil",
+                    topico: "Ditadura Militar"
+                },
+                {
+                    id: 58,
+                    disciplina: "História",
+                    enunciado: "A Guerra Fria (1947-1991) foi marcada pela disputa entre:",
+                    alternativas: ["A) Brasil e Argentina", "B) Estados Unidos e União Soviética", "C) Alemanha e França", "D) China e Japão", "E) Inglaterra e Estados Unidos"],
+                    respostaCorreta: "B",
+                    explicacao: "A GUERRA FRIA foi a disputa ideológica entre EUA (capitalismo) e URSS (socialismo). Não houve confronto direto, mas sim corrida armamentista, corrida espacial e conflitos indiretos (Guerra da Coreia, Vietnã). Terminou com a queda do Muro de Berlim (1989) e dissolução da URSS (1991).",
+                    dificuldade: "fácil",
+                    topico: "História Mundial"
+                },
+                {
+                    id: 59,
+                    disciplina: "História",
+                    enunciado: "No Brasil Colonial, o primeiro ciclo econômico foi:",
+                    alternativas: ["A) Ouro", "B) Café", "C) Pau-brasil", "D) Borracha", "E) Soja"],
+                    respostaCorreta: "C",
+                    explicacao: "O PAU-BRASIL foi o primeiro ciclo econômico do Brasil Colonial (1500-1530). A madeira era extraída e exportada para tingimento de tecidos. Depois vieram: AÇÚCAR (séculos XVI-XVII, Nordeste), OURO e DIAMANTE (século XVIII, Minas Gerais), e CAFÉ (séculos XIX-XX, Vale do Paraíba e Oeste Paulista).",
+                    dificuldade: "fácil",
+                    topico: "Brasil Colonial"
+                },
+                {
+                    id: 60,
+                    disciplina: "História",
+                    enunciado: "A escravidão no Brasil começou com:",
+                    alternativas: ["A) Africanos trazidos pelos portugueses", "B) Indígenas escravizados", "C) Trabalhadores europeus", "D) Imigrantes japoneses", "E) Colonos ingleses"],
+                    respostaCorreta: "B",
+                    explicacao: "A ESCRAVIDÃO no Brasil começou com os INDÍGENAS. Porém, a escravidão indígena enfrentou resistência (fuga, conhecimento do terreno) e oposição jesuítica. A partir do século XVI, a escravidão AFRICANA se tornou predominante, com o tráfico negreiro trazendo milhões de africanos até 1888.",
+                    dificuldade: "média",
+                    topico: "Escravidão"
+                }
+            ],
+            geografia: [
+                {
+                    id: 61,
+                    disciplina: "Geografia",
+                    enunciado: "A dinâmica climática do Brasil é influenciada por massas de ar. A floresta Amazônica contribui para chuvas no Centro-Oeste e Sudeste através dos:",
+                    alternativas: ["A) Rios subterrâneos", "B) Rios voadores", "C) Ventos do sul", "D) Correntes marítimas", "E) geleiras andinas"],
+                    respostaCorreta: "B",
+                    explicacao: "Os 'RIOS VOADORES' são massas de ar úmido formadas pela evapotranspiração da Floresta Amazônica. Essas massas viajam para o Sul e Sudeste, provocando CHUVAS nessas regiões. Por isso, o desmatamento da Amazônia pode causar seca em outras partes do Brasil.",
+                    dificuldade: "média",
+                    topico: "Clima"
+                },
+                {
+                    id: 62,
+                    disciplina: "Geografia",
+                    enunciado: "O clima EQUATORIAL, predominante na Amazônia, caracteriza-se por ser:",
+                    alternativas: ["A) Quente e seco", "B) Quente e úmido", "C) Frio e seco", "D) Ameno com estações definidas", "E) Frio e úmido"],
+                    respostaCorreta: "B",
+                    explicacao: "O clima EQUATORIAL é QUENTE e ÚMIDO durante o ano todo, sem estações definidas. Ocorre na região Amazônica, próxima ao Equador. Temperaturas elevadas (média 25°C) e alta pluviosidade (chuvas frequentes) são características principais.",
+                    dificuldade: "fácil",
+                    topico: "Clima"
+                },
+                {
+                    id: 63,
+                    disciplina: "Geografia",
+                    enunciado: "O bioma brasileiro caracterizado por vegetação adaptada ao clima semiárido é:",
+                    alternativas: ["A) Amazônia", "B) Cerrado", "C) Caatinga", "D) Mata Atlântica", "E) Pantanal"],
+                    respostaCorreta: "C",
+                    explicacao: "A CAATINGA é o bioma do SEMIÁRIDO nordestino. A vegetação é adaptada à seca: plantas com espinhos, folhas pequenas, raízes profundas, caules que armazenam água. É o único bioma exclusivamente brasileiro, mas muito desmatado.",
+                    dificuldade: "fácil",
+                    topico: "Biomas"
+                },
+                {
+                    id: 64,
+                    disciplina: "Geografia",
+                    enunciado: "A região brasileira com MAIOR população é:",
+                    alternativas: ["A) Norte", "B) Nordeste", "C) Sudeste", "D) Sul", "E) Centro-Oeste"],
+                    respostaCorreta: "C",
+                    explicacao: "O SUDESTE é a região mais POPULOSA do Brasil (cerca de 42% da população), com estados como São Paulo, Rio de Janeiro, Minas Gerais e Espírito Santo. Também é a mais INDUSTRIALIZADA e urbanizada. São Paulo é a cidade mais populosa do país.",
+                    dificuldade: "fácil",
+                    topico: "Regiões do Brasil"
+                },
+                {
+                    id: 65,
+                    disciplina: "Geografia",
+                    enunciado: "São formas de relevo:",
+                    alternativas: ["A) Montanhas, planaltos, planícies e depressões", "B) Rios, lagos, oceanos e mares", "C) Florestas, desertos, savanas e tundras", "D) Vulcanismo, terremotos, erosão e tectonismo", "E) Vales, cavernas, cachoeiras e dunas"],
+                    respostaCorreta: "A",
+                    explicacao: "As principais FORMAS DE RELEVO são: MONTANHAS (elevações altas), PLANALTOS (superfícies elevadas e planas), PLANÍCIES (superfícies baixas e planas) e DEPRESSÕES (áreas mais baixas que o entorno). Os agentes formadores podem ser internos (vulcanismo, tectonismo) ou externos (erosão).",
+                    dificuldade: "fácil",
+                    topico: "Relevo"
+                },
+                {
+                    id: 66,
+                    disciplina: "Geografia",
+                    enunciado: "O capitalismo em sua fase FINANCEIRA/GLOBALIZADA caracteriza-se por:",
+                    alternativas: ["A) Expansão marítima e comércio de especiarias", "B) Revolução Industrial e produção em massa", "C) Tecnologia, serviços e circulação financeira global", "D) Comércio de escravos e plantation", "E) Produção artesanal e feiras medievais"],
+                    respostaCorreta: "C",
+                    explicacao: "O capitalismo FINANCEIRO ou GLOBALIZADO (atual) caracteriza-se por: TECNOLOGIA avançada, predominância do setor de SERVIÇOS, circulação FINANCEIRA global, multinacionais, internet, globalização. Anteriores: Comercial (séc. XV-XVIII) e Industrial (séc. XVIII-XX).",
+                    dificuldade: "média",
+                    topico: "Capitalismo"
+                },
+                {
+                    id: 67,
+                    disciplina: "Geografia",
+                    enunciado: "A região Nordeste do Brasil tem:",
+                    alternativas: ["A) O maior número de estados (9)", "B) A maior área territorial", "C) A menor população", "D) O clima mais frio", "E) A economia mais industrializada"],
+                    respostaCorreta: "A",
+                    explicacao: "O NORDESTE é a região com MAIS ESTADOS (9): Maranhão, Piauí, Ceará, Rio Grande do Norte, Paraíba, Pernambuco, Alagoas, Sergipe e Bahia. A região Norte tem a maior área. O Sudeste é o mais populoso e industrializado. O Sul tem o clima mais frio.",
+                    dificuldade: "fácil",
+                    topico: "Regiões do Brasil"
+                },
+                {
+                    id: 68,
+                    disciplina: "Geografia",
+                    enunciado: "O fator que MAIS influencia a temperatura de uma região é:",
+                    alternativas: ["A) A altitude", "B) A latitude", "C) A vegetação", "D) A população", "E) A hidrografia"],
+                    respostaCorreta: "B",
+                    explicacao: "A LATITUDE é o principal fator de variação de temperatura. Quanto mais próximo do EQUADOR (latitude 0°), mais QUENTE. Quanto mais próximo dos POLOS, mais FRIO. A ALTITUDE também influencia: quanto mais alto, mais frio (a cada 100m sobe-se, a temperatura cai cerca de 0,6°C).",
+                    dificuldade: "média",
+                    topico: "Clima"
+                },
+                {
+                    id: 69,
+                    disciplina: "Geografia",
+                    enunciado: "Brasília, capital do Brasil, está localizada na região:",
+                    alternativas: ["A) Norte", "B) Nordeste", "C) Sudeste", "D) Sul", "E) Centro-Oeste"],
+                    respostaCorreta: "E",
+                    explicacao: "BRASÍLIA está localizada na região CENTRO-OESTE, no Distrito Federal. A região Centro-Oeste também inclui Goiás, Mato Grosso e Mato Grosso do Sul. Caracteriza-se pela AGROPECUÁRIA forte e pelo CERRADO como bioma predominante.",
+                    dificuldade: "fácil",
+                    topico: "Regiões do Brasil"
+                },
+                {
+                    id: 70,
+                    disciplina: "Geografia",
+                    enunciado: "A densidade demográfica é calculada por:",
+                    alternativas: ["A) População × Área", "B) População ÷ Área", "C) Área ÷ População", "D) População + Área", "E) População - Área"],
+                    respostaCorreta: "B",
+                    explicacao: "DENSIDADE DEMOGRÁFICA = POPULAÇÃO ÷ ÁREA.\nResultado em hab/km² (habitantes por quilômetro quadrado).\nExemplo: Se uma cidade tem 100.000 habitantes e 50 km², sua densidade é: 100.000 ÷ 50 = 2.000 hab/km².\nA densidade mostra o grau de 'povoamento' de uma área.",
+                    dificuldade: "fácil",
+                    topico: "População"
+                }
+            ]
+        };
+
+        // ===== VARIÁVEIS GLOBAIS =====
+        let questoesSelecionadas = [];
+        let questaoAtual = 0;
+        let respostasUsuario = {};
+        let questoesMarcadas = new Set();
+        let tempoRestante = 3 * 60 * 60; // 3 horas em segundos
+        let timerInterval = null;
+        let simuladoIniciado = false;
+        let simuladoFinalizado = false;
+
+        // ===== FUNÇÕES DE INICIALIZAÇÃO =====
+
+        // Carregar histórico do localStorage
+        function carregarHistorico() {
+            const historico = JSON.parse(localStorage.getItem('simulado_ifpe_historico') || '[]');
+            if (historico.length > 0) {
+                document.getElementById('historico').classList.remove('hidden');
+                const ultimo = historico[historico.length - 1];
+                const melhor = historico.reduce((max, h) => h.pontuacao > max.pontuacao ? h : max, historico[0]);
+
+                document.getElementById('historico-content').innerHTML = `
+                    <div class="historico-item">• Último simulado: ${ultimo.acertos}/30 (${ultimo.porcentagem}%)</div>
+                    <div class="historico-item">• Melhor resultado: ${melhor.acertos}/30 (${melhor.porcentagem}%)</div>
+                    <div class="historico-item">• Total de simulados: ${historico.length}</div>
+                `;
+            }
+        }
+
+        // Selecionar questões aleatórias por disciplina
+        function selecionarQuestoes() {
+            questoesSelecionadas = [];
+
+            // Português: 10 de 20
+            const portugues = [...bancoQuestoes.portugues].sort(() => Math.random() - 0.5).slice(0, 10);
+
+            // Matemática: 10 de 20
+            const matematica = [...bancoQuestoes.matematica].sort(() => Math.random() - 0.5).slice(0, 10);
+
+            // Ciências: 4 de 10
+            const ciencias = [...bancoQuestoes.ciencias].sort(() => Math.random() - 0.5).slice(0, 4);
+
+            // História: 3 de 10
+            const historia = [...bancoQuestoes.historia].sort(() => Math.random() - 0.5).slice(0, 3);
+
+            // Geografia: 3 de 10
+            const geografia = [...bancoQuestoes.geografia].sort(() => Math.random() - 0.5).slice(0, 3);
+
+            // Juntar todas e embaralhar
+            questoesSelecionadas = [...portugues, ...matematica, ...ciencias, ...historia, ...geografia];
+            questoesSelecionadas.sort(() => Math.random() - 0.5);
+
+            // Reordenar por disciplina para ficar mais organizado
+            const ordem = { 'Português': 1, 'Matemática': 2, 'Ciências': 3, 'História': 4, 'Geografia': 5 };
+            questoesSelecionadas.sort((a, b) => ordem[a.disciplina] - ordem[b.disciplina]);
+        }
+
+        // Iniciar simulado
+        function iniciarSimulado() {
+            selecionarQuestoes();
+            questaoAtual = 0;
+            respostasUsuario = {};
+            questoesMarcadas = new Set();
+            tempoRestante = 3 * 60 * 60;
+            simuladoIniciado = true;
+            simuladoFinalizado = false;
+
+            document.getElementById('tela-inicial').classList.add('hidden');
+            document.getElementById('tela-questao').classList.remove('hidden');
+
+            iniciarTimer();
+            atualizarNavegacaoRapida();
+            renderizarQuestao();
+        }
+
+        // ===== FUNÇÕES DO TIMER =====
+
+        function iniciarTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                tempoRestante--;
+
+                if (tempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    finalizarSimulado();
+                    return;
+                }
+
+                atualizarTimer();
+
+                // Alerta quando faltar 30 minutos
+                if (tempoRestante === 30 * 60) {
+                    alert('⚠️ ATENÇÃO: Faltam apenas 30 minutos para o término do simulado!');
+                }
+            }, 1000);
+        }
+
+        function atualizarTimer() {
+            const horas = Math.floor(tempoRestante / 3600);
+            const minutos = Math.floor((tempoRestante % 3600) / 60);
+            const segundos = tempoRestante % 60;
+
+            const timerTexto = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+            document.getElementById('timer-texto').textContent = timerTexto;
+
+            // Alerta visual nos últimos 30 minutos
+            if (tempoRestante <= 30 * 60) {
+                document.getElementById('timer').classList.add('alerta');
+            }
+        }
+
+        // ===== FUNÇÕES DE RENDERIZAÇÃO =====
+
+        function renderizarQuestao() {
+            const questao = questoesSelecionadas[questaoAtual];
+            const numeroQuestao = questaoAtual + 1;
+
+            // Atualizar número da questão
+            document.getElementById('questao-numero').textContent = `Questão ${numeroQuestao}/30`;
+
+            // Atualizar tag de disciplina
+            const tagDisciplina = document.getElementById('disciplina-tag');
+            tagDisciplina.textContent = questao.disciplina;
+            tagDisciplina.className = 'disciplina-tag ' + questao.disciplina.toLowerCase();
+
+            // Atualizar tag de dificuldade
+            const tagDificuldade = document.getElementById('dificuldade-tag');
+            tagDificuldade.textContent = questao.dificuldade.charAt(0).toUpperCase() + questao.dificuldade.slice(1);
+
+            // Atualizar enunciado
+            document.getElementById('enunciado').textContent = questao.enunciado;
+
+            // Atualizar alternativas
+            const containerAlternativas = document.getElementById('alternativas');
+            containerAlternativas.innerHTML = '';
+
+            questao.alternativas.forEach((alt, index) => {
+                const letra = String.fromCharCode(65 + index); // A, B, C, D, E
+                const div = document.createElement('div');
+                div.className = 'alternativa';
+                div.onclick = () => selecionarAlternativa(letra);
+
+                if (respostasUsuario[questaoAtual] === letra) {
+                    div.classList.add('selecionada');
+                }
+
+                div.innerHTML = `
+                    <span class="alternativa-letra">${letra}</span>
+                    <span class="alternativa-texto">${alt.substring(3)}</span>
+                `;
+
+                containerAlternativas.appendChild(div);
+            });
+
+            // Atualizar botão de marcar
+            const btnMarcar = document.getElementById('btn-marcar');
+            if (questoesMarcadas.has(questaoAtual)) {
+                btnMarcar.classList.add('marcada');
+                btnMarcar.innerHTML = '🚩 Marcada para revisar';
+            } else {
+                btnMarcar.classList.remove('marcada');
+                btnMarcar.innerHTML = '🚩 Marcar para revisar';
+            }
+
+            // Atualizar barra de progresso
+            document.getElementById('progresso-texto').textContent = `Questão ${numeroQuestao} de 30`;
+            document.getElementById('progresso-fill').style.width = `${(numeroQuestao / 30) * 100}%`;
+
+            const respondidas = Object.keys(respostasUsuario).length;
+            document.getElementById('respondidas-texto').textContent = `Respondidas: ${respondidas}/30`;
+
+            // Atualizar navegação rápida
+            atualizarNavegacaoRapida();
+
+            // Scroll para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function atualizarNavegacaoRapida() {
+            const container = document.getElementById('nav-questoes');
+            container.innerHTML = '';
+
+            for (let i = 0; i < 30; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'nav-questao-btn';
+                btn.textContent = i + 1;
+
+                if (i === questaoAtual) {
+                    btn.classList.add('atual');
+                }
+
+                if (respostasUsuario[i] !== undefined) {
+                    btn.classList.add('respondida');
+                }
+
+                if (questoesMarcadas.has(i)) {
+                    btn.classList.add('marcada');
+                }
+
+                btn.onclick = () => irParaQuestao(i);
+                container.appendChild(btn);
+            }
+        }
+
+        // ===== FUNÇÕES DE INTERAÇÃO =====
+
+        function selecionarAlternativa(letra) {
+            respostasUsuario[questaoAtual] = letra;
+            renderizarQuestao();
+        }
+
+        function toggleMarcar() {
+            if (questoesMarcadas.has(questaoAtual)) {
+                questoesMarcadas.delete(questaoAtual);
+            } else {
+                questoesMarcadas.add(questaoAtual);
+            }
+            renderizarQuestao();
+        }
+
+        function questaoAnterior() {
+            if (questaoAtual > 0) {
+                questaoAtual--;
+                renderizarQuestao();
+            }
+        }
+
+        function proximaQuestao() {
+            if (questaoAtual < 29) {
+                questaoAtual++;
+                renderizarQuestao();
+            }
+        }
+
+        function irParaQuestao(index) {
+            questaoAtual = index;
+            renderizarQuestao();
+        }
+
+        // ===== FUNÇÕES DE FINALIZAÇÃO =====
+
+        function finalizarSimulado() {
+            const respondidas = Object.keys(respostasUsuario).length;
+
+            if (respondidas < 30) {
+                const naoRespondidas = 30 - respondidas;
+                if (!confirm(`Você ainda tem ${naoRespondidas} questão(ões) não respondida(s). Deseja finalizar mesmo assim?`)) {
+                    return;
+                }
+            }
+
+            clearInterval(timerInterval);
+            simuladoFinalizado = true;
+
+            calcularResultado();
+        }
+
+        function calcularResultado() {
+            let acertos = 0;
+            let errosPorDisciplina = {
+                'Português': { total: 0, acertos: 0 },
+                'Matemática': { total: 0, acertos: 0 },
+                'Ciências': { total: 0, acertos: 0 },
+                'História': { total: 0, acertos: 0 },
+                'Geografia': { total: 0, acertos: 0 }
+            };
+
+            questoesSelecionadas.forEach((questao, index) => {
+                errosPorDisciplina[questao.disciplina].total++;
+
+                if (respostasUsuario[index] === questao.respostaCorreta) {
+                    acertos++;
+                    errosPorDisciplina[questao.disciplina].acertos++;
+                }
+            });
+
+            const porcentagem = Math.round((acertos / 30) * 100);
+
+            // Salvar no histórico
+            const historico = JSON.parse(localStorage.getItem('simulado_ifpe_historico') || '[]');
+            historico.push({
+                data: new Date().toISOString(),
+                acertos: acertos,
+                porcentagem: porcentagem
+            });
+            localStorage.setItem('simulado_ifpe_historico', JSON.stringify(historico));
+
+            // Exibir resultado
+            document.getElementById('tela-questao').classList.add('hidden');
+            document.getElementById('tela-resultado').classList.remove('hidden');
+
+            // Definir ícone e mensagem baseado na pontuação
+            let icone = '🎉';
+            let classePontuacao = 'alta';
+
+            if (porcentagem < 50) {
+                icone = '😔';
+                classePontuacao = 'baixa';
+            } else if (porcentagem < 70) {
+                icone = '💪';
+                classePontuacao = 'media';
+            }
+
+            document.getElementById('resultado-icon').textContent = icone;
+            document.getElementById('pontuacao').textContent = `${acertos}/30 (${porcentagem}%)`;
+            document.getElementById('pontuacao').className = 'pontuacao ' + classePontuacao;
+
+            // Exibir resultado por disciplina
+            const containerDisciplinas = document.getElementById('disciplinas-resultado');
+            containerDisciplinas.innerHTML = '';
+
+            Object.keys(errosPorDisciplina).forEach(disc => {
+                const dados = errosPorDisciplina[disc];
+                if (dados.total > 0) {
+                    const porc = Math.round((dados.acertos / dados.total) * 100);
+                    const card = document.createElement('div');
+                    card.className = 'disciplina-card';
+                    card.innerHTML = `
+                        <h4>${disc}</h4>
+                        <div class="score">${dados.acertos}/${dados.total} (${porc}%)</div>
+                    `;
+                    containerDisciplinas.appendChild(card);
+                }
+            });
+
+            // Mensagem de erros
+            const erros = 30 - acertos;
+            document.getElementById('msg-erros').textContent = erros > 0
+                ? `⚠️ Você errou ${erros} questão(ões). Veja a correção detalhada abaixo!`
+                : '🎉 Parabéns! Você acertou todas as questões!';
+        }
+
+        function verCorrecao() {
+            document.getElementById('tela-resultado').classList.add('hidden');
+            document.getElementById('tela-correcao').classList.remove('hidden');
+
+            // Atualizar progresso da correção
+            const erros = [];
+            questoesSelecionadas.forEach((questao, index) => {
+                if (respostasUsuario[index] !== questao.respostaCorreta) {
+                    erros.push({ questao, index, respostaUsuario: respostasUsuario[index] });
+                }
+            });
+
+            document.getElementById('correcao-progresso').textContent =
+                `Você errou ${erros.length} questão(ões). Veja abaixo a correção detalhada de cada uma.`;
+
+            // Renderizar correções
+            const container = document.getElementById('correcoes-container');
+            container.innerHTML = '';
+
+            erros.forEach((erro, i) => {
+                const { questao, respostaUsuario } = erro;
+                const numeroQuestao = erro.index + 1;
+
+                const div = document.createElement('div');
+                div.className = 'correcao-container fade-in';
+
+                const statusClass = respostaUsuario ? 'incorreta' : 'correta';
+
+                div.innerHTML = `
+                    <div class="correcao-header ${statusClass}">
+                        <span class="status-icon">❌</span>
+                        <div>
+                            <div class="correcao-titulo">Questão ${numeroQuestao} - ${questao.disciplina}</div>
+                            <small style="color: var(--cinza-escuro);">Tópico: ${questao.topico} | Dificuldade: ${questao.dificuldade}</small>
+                        </div>
+                    </div>
+
+                    <div class="enunciado">${questao.enunciado}</div>
+
+                    <div class="resposta-comparacao">
+                        <div class="resposta-box resposta-usuario">
+                            ❌ Sua resposta: ${respostaUsuario || 'Não respondida'}
+                        </div>
+                        <div class="resposta-box resposta-correta">
+                            ✅ Resposta correta: ${questao.respostaCorreta}
+                        </div>
+                    </div>
+
+                    <div class="explicacao-box">
+                        <h4>📖 Explicação Detalhada</h4>
+                        <p style="white-space: pre-line;">${questao.explicacao}</p>
+                    </div>
+
+                    <div class="dica-ia">
+                        <h4>💡 Dica Personalizada</h4>
+                        <p>${gerarDicaIA(questao, respostaUsuario)}</p>
+                    </div>
+
+                    <div class="topico-info">
+                        <div class="topico-item">
+                            <span>📚 Tópico:</span>
+                            <span>${questao.topico}</span>
+                        </div>
+                        <div class="topico-item">
+                            <span>📊 Dificuldade:</span>
+                            <span>${questao.dificuldade}</span>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            // Se não houver erros
+            if (erros.length === 0) {
+                container.innerHTML = `
+                    <div class="correcao-container fade-in" style="text-align: center;">
+                        <div style="font-size: 4em;">🎉</div>
+                        <h3 style="color: var(--verde-destaque); margin: 20px 0;">Parabéns!</h3>
+                        <p>Você acertou todas as questões! Continue praticando para manter o excelente desempenho.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function gerarDicaIA(questao, respostaUsuario) {
+            const dicas = {
+                'Conjunções': 'As conjunções são palavras que conectam orações. Para identificar o tipo, tente substituir por sinônimos: "mas" = "porém" (oposição), "e" = adição, "porque" = causa.',
+                'Pronomes': 'Pronomes relativos (que, qual, quem, onde, cujo) retomam um termo anterior. Teste substituindo por "o qual" ou "a qual" para verificar se é pronome relativo.',
+                'Pontuação': 'Lembre-se: vírgula isola vocativo, aposto e termos deslocados. Não se usa vírgula entre sujeito e verbo ou entre verbo e objeto direto.',
+                'Verbos': 'Pretérito perfeito = ação pontual no passado (terminou). Pretérito imperfeito = ação habitual ou duradoura no passado (era contínua).',
+                'Acentuação': 'Oxítonas: acentuadas se terminam em A(S), E(S), O(S), EM, ENS. Paroxítonas: acentuadas se NÃO terminam nessas letras. Proparoxítonas: TODAS são acentuadas.',
+                'Frações': 'Para operar frações com denominadores diferentes, primeiro encontre o MMC (Mínimo Múltiplo Comum). Depois converta todas para o mesmo denominador.',
+                'Regra de Três': 'Direta: as grandezas aumentam ou diminuem juntas. Inversa: uma aumenta enquanto a outra diminui. Identifique a relação antes de calcular!',
+                'Porcentagem': 'Para calcular X% de Y: (X/100) × Y. Para aumento: valor × (1 + taxa). Para desconto: valor × (1 - taxa). Sempre use o valor ORIGINAL como base.',
+                'Geometria': 'Memorize as fórmulas principais: Área quadrado = l², Área retângulo = b×h, Área triângulo = (b×h)/2, Área círculo = πr². Pitágoras: a² = b² + c².',
+                'Equações': 'Equação 1º grau: isole a incógnita. Equação 2º grau: use Bhaskara (Δ = b² - 4ac, x = (-b ± √Δ)/2a). Verifique sempre o resultado!',
+                'Ecologia': 'BIÓTICO = seres VIVOS (plantas, animais, fungos). ABIÓTICO = fatores NÃO VIVOS (água, luz, temperatura, solo). Produtores fazem fotossíntese!',
+                'Corpo Humano': 'Sistema digestório: transformação de alimentos. Sistema respiratório: troca de gases (hematose). Sistema urinário: filtração do sangue.',
+                'Ditadura Militar': 'Período de 1964-1985. Características: censura, repressão, tortura, AI-5, "milagre econômico". Lei da Anistia (1979) perdoou ambos os lados.',
+                'Escravidão': 'Escravidão indígena veio primeiro, depois africana. Brasil foi o último país das Américas a abolir (1888). Lei Áurea não previu integração social.',
+                'Clima': 'Latitude: mais perto do Equador = mais quente. Altitude: mais alto = mais frio. Massas de ar influenciam chuvas e temperatura.',
+                'Regiões do Brasil': 'Norte = maior área, Amazônia. Nordeste = 9 estados, semiárido. Sudeste = mais populoso e industrializado. Sul = mais frio. Centro-Oeste = agropecuária, Brasília.'
+            };
+
+            let dica = dicas[questao.topico] || 'Revise o conteúdo deste tópico nos materiais de estudo. A prática constante é fundamental para a fixação do conhecimento!';
+
+            // Personalizar baseado no erro
+            if (!respostaUsuario) {
+                dica += ' Você deixou esta questão em branco. Tente sempre responder, mesmo que não tenha certeza absoluta.';
+            }
+
+            return dica;
+        }
+
+        function voltarResultado() {
+            document.getElementById('tela-correcao').classList.add('hidden');
+            document.getElementById('tela-resultado').classList.remove('hidden');
+        }
+
+        function refazerSimulado() {
+            if (confirm('Deseja iniciar um novo simulado? O progresso atual será perdido.')) {
+                document.getElementById('tela-resultado').classList.add('hidden');
+                document.getElementById('tela-correcao').classList.add('hidden');
+                document.getElementById('tela-inicial').classList.remove('hidden');
+                carregarHistorico();
+            }
+        }
+
+        // ===== SALVAR PROGRESSO AUTOMATICAMENTE =====
+
+        function salvarProgresso() {
+            if (simuladoIniciado && !simuladoFinalizado) {
+                const progresso = {
+                    questoesSelecionadas: questoesSelecionadas.map(q => q.id),
+                    questaoAtual,
+                    respostasUsuario,
+                    questoesMarcadas: Array.from(questoesMarcadas),
+                    tempoRestante
+                };
+                localStorage.setItem('simulado_ifpe_progresso', JSON.stringify(progresso));
+            }
+        }
+
+        // Salvar a cada 30 segundos
+        setInterval(salvarProgresso, 30000);
+
+        // ===== INICIALIZAÇÃO =====
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarHistorico();
+        });
+
+        // ===== PREVENIR PERDA DE DADOS =====
+
+        window.addEventListener('beforeunload', (e) => {
+            if (simuladoIniciado && !simuladoFinalizado) {
+                salvarProgresso();
+                e.preventDefault();
+                e.returnValue = 'Você tem um simulado em andamento. Deseja realmente sair?';
+            }
+        });
+    </script>
+</body>
+</html>
